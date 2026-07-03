@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>確吧宇宙｜政大好好問</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <span class="pixel-logo"></span>
+      <span>確吧宇宙 <small>Chatbot Universe</small></span>
+    </div>
+    <nav>
+      <a class="active" href="#">首頁</a>
+      <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
+      <a href="javascript:void(0)" onclick="scrollToAbout()">關於我們</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="stars"></div>
+    <div class="hero-rocket">
+      <div class="body"></div>
+      <div class="window"></div>
+      <div class="fire"></div>
+    </div>
+
+    <div class="hero-kicker">🚀 確吧宇宙</div>
+    <h1>政大<span class="yellow">好好問</span></h1>
+    <div class="subtitle">NCCU On the Mission</div>
+
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="搜尋 Chatbot 名稱或功能...">
+      <span class="search-icon">⌕</span>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <div class="filter-title">服務對象</div>
+        <div class="chips" id="audienceFilters">
+          <button class="chip active" data-value="all">全部</button>
+          <button class="chip" data-value="學生">學生</button>
+          <button class="chip" data-value="教師">教師</button>
+          <button class="chip" data-value="職員">職員</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-title">業務分類</div>
+        <div class="chips" id="categoryFilters">
+          <button class="chip active" data-value="all">全部</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="section-title">🪐 Beta 星系</div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" style="display:none;">目前沒有符合條件的 Chatbot。</div>
+
+    <section id="about" class="about">
+      <h2>關於我們</h2>
+      <p class="team">我們的政大2026 行政AI競賽團隊——懶得剛剛好</p>
+      <p>希望藉由 AI 協助大家從重複、繁瑣的行政日常中解放出來。</p>
+
+      <div class="tool-list">
+        <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
+        <a href="https://forms.gle/z8q9775oy5MedhAU7" target="_blank">確吧宇宙 Beta 星系登錄表</a>
+        <a href="https://share.gemini.google/VFqWzNdEyvCS" target="_blank">Chatbot 嵌入網頁產生器</a>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
