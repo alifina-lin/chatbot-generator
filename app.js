@@ -1,6 +1,6 @@
 // ===== 設定區 =====
 // 把下面換成你部署 Code.gs 後拿到的 Web App 網址（結尾是 /exec）
-const GAS_API_URL = 'PUT_YOUR_GAS_WEB_APP_EXEC_URL_HERE';
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyYEHXDmUmvmqPPXPwdfH4L2BIwXn_yDkOdQEIy53D4kdqFwjpwL0JyzqeSkp_RSOWgNQ/exec';
 
 let allBots = [];
 let currentAudience = 'all';
