@@ -411,6 +411,67 @@ main { padding: 34px 40px 48px; }
   border-radius: 12px;
 }
 
+.pod.skeleton {
+  cursor: default;
+  pointer-events: none;
+}
+
+.skeleton-badge,
+.skeleton-line,
+.skeleton-tag,
+.skeleton-btn {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 37%, #e2e8f0 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: 4px;
+}
+
+.skeleton-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 64px;
+  height: 22px;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.skeleton-title {
+  height: 22px;
+  width: 70%;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.skeleton-line.short {
+  width: 55%;
+}
+
+.skeleton-tags {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.skeleton-tag {
+  width: 64px;
+  height: 24px;
+}
+
+.skeleton-btn {
+  height: 44px;
+  border-radius: 0;
+  margin-top: 12px;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
 @media (max-width: 900px) {
   header { padding: 0 20px; }
   nav { display: none; }

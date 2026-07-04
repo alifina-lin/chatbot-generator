@@ -9,6 +9,8 @@ let currentCategory = 'all';
 fetchChatbots();
 
 function fetchChatbots() {
+  showSkeleton();
+
   fetch(`${GAS_API_URL}?action=data`)
     .then(res => res.json())
     .then(payload => {
@@ -16,10 +18,33 @@ function fetchChatbots() {
       init(payload.data || []);
     })
     .catch(err => {
+      const grid = document.getElementById('grid');
       const empty = document.getElementById('empty');
+      grid.innerHTML = '';
       empty.style.display = 'block';
       empty.textContent = '讀取資料失敗：' + err.message;
     });
+}
+
+// 資料還在載入時，先顯示骨架卡片，避免畫面空白造成「沒有確吧」的錯覺
+function showSkeleton(count = 6) {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  empty.style.display = 'none';
+
+  grid.innerHTML = Array.from({ length: count }).map(() => `
+    <article class="pod skeleton" aria-hidden="true">
+      <div class="skeleton-badge"></div>
+      <div class="skeleton-line skeleton-title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="skeleton-tags">
+        <span class="skeleton-tag"></span>
+        <span class="skeleton-tag"></span>
+      </div>
+      <div class="skeleton-btn"></div>
+    </article>
+  `).join('');
 }
 
 function init(data) {
