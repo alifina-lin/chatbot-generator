@@ -249,7 +249,7 @@ h1 .yellow { color: var(--yellow); }
 .filters {
   display: flex;
   justify-content: center;
-  gap: 48px;
+  gap: 14px;
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
