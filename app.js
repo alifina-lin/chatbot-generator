@@ -20,9 +20,14 @@ function fetchChatbots() {
     .catch(err => {
       const grid = document.getElementById('grid');
       const empty = document.getElementById('empty');
+      const verifiedGrid = document.getElementById('verifiedGrid');
+      const verifiedEmpty = document.getElementById('verifiedEmpty');
       grid.innerHTML = '';
+      verifiedGrid.innerHTML = '';
       empty.style.display = 'block';
       empty.textContent = '讀取資料失敗：' + err.message;
+      verifiedEmpty.style.display = 'block';
+      verifiedEmpty.textContent = '讀取資料失敗：' + err.message;
     });
 }
 
@@ -30,9 +35,12 @@ function fetchChatbots() {
 function showSkeleton(count = 6) {
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
+  const verifiedGrid = document.getElementById('verifiedGrid');
+  const verifiedEmpty = document.getElementById('verifiedEmpty');
   empty.style.display = 'none';
+  verifiedEmpty.style.display = 'none';
 
-  grid.innerHTML = Array.from({ length: count }).map(() => `
+  const skeletonHtml = Array.from({ length: count }).map(() => `
     <article class="pod skeleton" aria-hidden="true">
       <div class="skeleton-badge"></div>
       <div class="skeleton-line skeleton-title"></div>
@@ -45,6 +53,9 @@ function showSkeleton(count = 6) {
       <div class="skeleton-btn"></div>
     </article>
   `).join('');
+
+  grid.innerHTML = skeletonHtml;
+  verifiedGrid.innerHTML = '';
 }
 
 function init(data) {
@@ -92,6 +103,9 @@ function render() {
   const keyword = document.getElementById('search').value.trim().toLowerCase();
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
+  const verifiedGrid = document.getElementById('verifiedGrid');
+  const verifiedEmpty = document.getElementById('verifiedEmpty');
+  const verifiedCount = document.getElementById('verifiedCount');
 
   const filtered = allBots.filter(bot => {
     const text = [
@@ -118,36 +132,48 @@ function render() {
     return matchKeyword && matchAudience && matchCategory;
   });
 
+  const verifiedBots = filtered.filter(bot => isVerified(bot.status));
+  const betaBots = filtered.filter(bot => !isVerified(bot.status));
+
+  // 驗證星系
+  verifiedGrid.innerHTML = '';
+  verifiedEmpty.style.display = verifiedBots.length ? 'none' : 'block';
+  verifiedCount.textContent = verifiedBots.length ? `· ${verifiedBots.length} 個確吧已升級` : '';
+  verifiedBots.forEach(bot => verifiedGrid.appendChild(buildPod(bot)));
+
+  // Beta 星系
   grid.innerHTML = '';
-  empty.style.display = filtered.length ? 'none' : 'block';
+  empty.style.display = betaBots.length ? 'none' : 'block';
+  betaBots.forEach(bot => grid.appendChild(buildPod(bot)));
+}
 
-  filtered.forEach(bot => {
-    const pod = document.createElement('article');
-    pod.className = 'pod' + (isVerified(bot.status) ? ' verified' : '');
+function buildPod(bot) {
+  const pod = document.createElement('article');
+  pod.className = 'pod' + (isVerified(bot.status) ? ' verified' : '');
 
-    pod.innerHTML = `
-      <div class="platform">${escapeHtml(bot.platform)}</div>
-      <div class="pod-title">${escapeHtml(bot.name)}</div>
-      <div class="brief">${escapeHtml(bot.brief)}</div>
+  pod.innerHTML = `
+    ${isVerified(bot.status) ? '<div class="verified-badge">✅ 已驗證</div>' : ''}
+    <div class="platform">${escapeHtml(bot.platform)}</div>
+    <div class="pod-title">${escapeHtml(bot.name)}</div>
+    <div class="brief">${escapeHtml(bot.brief)}</div>
 
-      <div class="tags">
-        ${tag(bot.unit)}
-        ${splitText(bot.audience).map(tag).join('')}
-      </div>
+    <div class="tags">
+      ${tag(bot.unit)}
+      ${splitText(bot.audience).map(tag).join('')}
+    </div>
 
-      <a class="launch" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
+    <a class="launch" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
 
-      <details class="detail">
-        <summary>查看詳細資訊</summary>
-        <div><strong>可以協助：</strong>${escapeHtml(bot.help || '未填寫')}</div>
-        <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
-        <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
-        <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
-      </details>
-    `;
+    <details class="detail">
+      <summary>查看詳細資訊</summary>
+      <div><strong>可以協助：</strong>${escapeHtml(bot.help || '未填寫')}</div>
+      <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
+      <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
+      <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
+    </details>
+  `;
 
-    grid.appendChild(pod);
-  });
+  return pod;
 }
 
 function splitText(value) {
@@ -185,4 +211,16 @@ function scrollToAbout() {
   const about = document.getElementById('about');
   if (!about) return;
   about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function scrollToVerified() {
+  const verified = document.getElementById('verified');
+  if (!verified) return;
+  verified.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function scrollToBeta() {
+  const beta = document.getElementById('beta');
+  if (!beta) return;
+  beta.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

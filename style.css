@@ -323,6 +323,104 @@ main { padding: 34px 40px 48px; }
   box-shadow: 0 0 0 4px rgba(246,196,83,.35), 8px 8px 0 rgba(0,0,0,.28);
 }
 
+.verified-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #4a2e00;
+  background: var(--gold);
+  border: 2px solid #fff3d1;
+  margin-bottom: 10px;
+}
+
+/* ===== 驗證星系 ===== */
+.verified-section {
+  position: relative;
+  margin-top: 48px;
+  margin-bottom: 48px;
+  padding: 32px 32px 28px;
+  border: 4px solid var(--gold);
+  outline: 4px solid #7a5a12;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(246,196,83,.16), transparent 45%),
+    linear-gradient(90deg, rgba(246,196,83,.05) 1px, transparent 1px),
+    linear-gradient(rgba(246,196,83,.05) 1px, transparent 1px),
+    rgba(2, 6, 23, .55);
+  background-size: auto, 14px 14px, 14px 14px, auto;
+  box-shadow: 0 0 0 6px rgba(246,196,83,.12), 10px 10px 0 rgba(0,0,0,.3);
+}
+
+.verified-header { margin-bottom: 24px; }
+
+.verified-title {
+  color: var(--gold);
+  margin-bottom: 8px;
+  text-shadow: 3px 3px 0 rgba(0,0,0,.3);
+}
+
+.verified-count {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fde68a;
+  vertical-align: middle;
+}
+
+.verified-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: #fde68a;
+  font-weight: 700;
+  opacity: .92;
+}
+
+.verified-grid { margin-bottom: 6px; }
+
+.verify-standard {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 2px dashed rgba(246,196,83,.5);
+}
+
+.verify-standard summary {
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--gold);
+  list-style: none;
+}
+
+.verify-standard summary::-webkit-details-marker { display: none; }
+
+.verify-standard summary::before {
+  content: "▸ ";
+}
+
+.verify-standard[open] summary::before {
+  content: "▾ ";
+}
+
+.verify-standard-body {
+  margin-top: 14px;
+  padding: 18px 20px;
+  background: rgba(255,255,255,.05);
+  border: 2px solid rgba(246,196,83,.35);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #f1f5f9;
+}
+
+.verify-standard-body p { margin: 0 0 10px; }
+.verify-standard-body ul { margin: 0 0 12px; padding-left: 22px; }
+.verify-standard-body li { margin-bottom: 6px; }
+.verify-standard-body a { color: var(--yellow); font-weight: 800; }
+
+@media (max-width: 900px) {
+  .verified-section { padding: 24px 20px; }
+}
+
 .pod-title {
   font-size: 24px;
   font-weight: 1000;

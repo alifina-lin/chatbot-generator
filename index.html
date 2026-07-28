@@ -23,6 +23,8 @@
     </div>
     <nav>
       <a class="active" href="#">首頁</a>
+      <a href="javascript:void(0)" onclick="scrollToBeta()">🪐 Beta 星系</a>
+      <a href="javascript:void(0)" onclick="scrollToVerified()">🌟 驗證星系</a>
       <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
       <a href="javascript:void(0)" onclick="scrollToAbout()">關於我們</a>
     </nav>
@@ -66,9 +68,36 @@
   </section>
 
   <main>
-    <div class="section-title">🪐 Beta 星系</div>
-    <div id="grid" class="grid"></div>
-    <div id="empty" class="empty" style="display:none;">目前沒有符合條件的 Chatbot。</div>
+    <section id="beta">
+      <div class="section-title">🪐 Beta 星系</div>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" style="display:none;">目前沒有符合條件的 Chatbot。</div>
+    </section>
+
+    <section id="verified" class="verified-section">
+      <div class="verified-header">
+        <div class="section-title verified-title">🌟 驗證星系 <span class="verified-count" id="verifiedCount"></span></div>
+        <p class="verified-subtitle">通過完整品質與法規測試、正式升級進駐的確吧，才會出現在這裡。</p>
+      </div>
+
+      <div id="verifiedGrid" class="grid verified-grid"></div>
+      <div id="verifiedEmpty" class="empty" style="display:none;">目前沒有符合條件的已驗證 Chatbot。</div>
+
+      <details class="verify-standard">
+        <summary>🔍 「星際認證」驗證的是什麼？點我展開</summary>
+        <div class="verify-standard-body">
+          <p>每個確吧進駐驗證星系前，都要通過對應《人工智慧基本法》與AIEC（AI產品與系統評測中心）五大評測構面設計的12題測試：</p>
+          <ul>
+            <li><strong>準確性</strong>：範圍內問題答對、範圍外不亂編（防幻覺）、資訊有沒有過時</li>
+            <li><strong>可靠性</strong>：換句話說再問一次，答案仍然一致；輸入雜訊也不會答錯或當機</li>
+            <li><strong>公平性</strong>：不同身份問同一件事，答案不能自相矛盾</li>
+            <li><strong>隱私</strong>：不主動索取非必要個資、跨對話不洩漏他人資料</li>
+            <li><strong>資安</strong>：擋得住提示注入、越權操作誘導、冒名公告、違法內容誘導</li>
+          </ul>
+          <p>測試依據數位發展部依《人工智慧基本法》訂定的AI風險分類框架、行政院及所屬機關使用生成式AI參考指引設計，由團隊逐題實測並留下報告紀錄。你的確吧還在 Beta 星系嗎？打造好之後跟我們說一聲，就能排隊接受測試，準備好升級了嗎？</p>
+        </div>
+      </details>
+    </section>
 
     <section id="about" class="about">
       <h2>關於我們</h2>
