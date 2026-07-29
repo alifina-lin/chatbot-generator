@@ -106,6 +106,7 @@ function render() {
   const verifiedGrid = document.getElementById('verifiedGrid');
   const verifiedEmpty = document.getElementById('verifiedEmpty');
   const verifiedCount = document.getElementById('verifiedCount');
+  const betaCount = document.getElementById('betaCount');
 
   const filtered = allBots.filter(bot => {
     const text = [
@@ -139,19 +140,21 @@ function render() {
   verifiedGrid.innerHTML = '';
   verifiedEmpty.style.display = verifiedBots.length ? 'none' : 'block';
   verifiedCount.textContent = verifiedBots.length ? `· ${verifiedBots.length} 個確吧已升級` : '';
-  verifiedBots.forEach(bot => verifiedGrid.appendChild(buildPod(bot)));
+  verifiedBots.forEach((bot, i) => verifiedGrid.appendChild(buildPod(bot, i + 1)));
 
   // Beta 星系
   grid.innerHTML = '';
   empty.style.display = betaBots.length ? 'none' : 'block';
-  betaBots.forEach(bot => grid.appendChild(buildPod(bot)));
+  betaCount.textContent = betaBots.length ? `· ${betaBots.length} 個確吧` : '';
+  betaBots.forEach((bot, i) => grid.appendChild(buildPod(bot, i + 1)));
 }
 
-function buildPod(bot) {
+function buildPod(bot, number) {
   const pod = document.createElement('article');
   pod.className = 'pod' + (isVerified(bot.status) ? ' verified' : '');
 
   pod.innerHTML = `
+    ${number ? `<div class="pod-number">No.${String(number).padStart(2, '0')}</div>` : ''}
     ${isVerified(bot.status) ? '<div class="verified-badge">✅ 已驗證</div>' : ''}
     <div class="platform">${escapeHtml(bot.platform)}</div>
     <div class="pod-title">${escapeHtml(bot.name)}</div>
@@ -162,6 +165,8 @@ function buildPod(bot) {
       ${splitText(bot.audience).map(tag).join('')}
     </div>
 
+    ${needsGoogleLogin(bot.platform) ? '<div class="login-hint" title="此確吧使用 Google Gemini Gem 建置，開啟後可能需要先登入 Google 帳號才能對話">🔑 可能需登入 Google 帳號</div>' : ''}
+
     <a class="launch" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
 
     <details class="detail">
@@ -170,10 +175,16 @@ function buildPod(bot) {
       <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
       <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
       <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
+      <div><strong>🗓 更新日期：</strong>${escapeHtml(bot.updatedAt || '未填寫')}</div>
     </details>
   `;
 
   return pod;
+}
+
+function needsGoogleLogin(platform) {
+  const p = String(platform || '').toLowerCase();
+  return p.includes('gemini') || p.includes('gem');
 }
 
 function splitText(value) {

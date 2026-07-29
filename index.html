@@ -23,8 +23,8 @@
     </div>
     <nav>
       <a class="active" href="#">首頁</a>
-      <a href="javascript:void(0)" onclick="scrollToBeta()">🪐 Beta 星系</a>
       <a href="javascript:void(0)" onclick="scrollToVerified()">🌟 驗證星系</a>
+      <a href="javascript:void(0)" onclick="scrollToBeta()">🪐 Beta 星系</a>
       <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
       <a href="javascript:void(0)" onclick="scrollToAbout()">關於我們</a>
     </nav>
@@ -68,12 +68,6 @@
   </section>
 
   <main>
-    <section id="beta">
-      <div class="section-title">🪐 Beta 星系</div>
-      <div id="grid" class="grid"></div>
-      <div id="empty" class="empty" style="display:none;">目前沒有符合條件的 Chatbot。</div>
-    </section>
-
     <section id="verified" class="verified-section">
       <div class="verified-header">
         <div class="section-title verified-title">🌟 驗證星系 <span class="verified-count" id="verifiedCount"></span></div>
@@ -99,6 +93,12 @@
       </details>
     </section>
 
+    <section id="beta">
+      <div class="section-title">🪐 Beta 星系 <span class="beta-count" id="betaCount"></span></div>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" style="display:none;">目前沒有符合條件的 Chatbot。</div>
+    </section>
+
     <section id="about" class="about">
       <h2>關於我們</h2>
       <p class="team">我們是政大2026 行政AI競賽團隊——懶得剛剛好</p>
@@ -111,6 +111,21 @@
       </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <details class="disclaimer">
+      <summary>免責聲明</summary>
+      <div class="disclaimer-body">
+        <ol>
+          <li>本平台為政大跨單位 Chatbot 成果之集散地，非統一審核之單一官方系統。各確吧由建置單位自行開發、維護與更新，內容正確性、時效性由建置單位負責，本平台不承擔各確吧回答內容之正確性責任。</li>
+          <li>各確吧分別架設於 Microsoft Copilot Studio、Google Gemini Gem 或建置單位自架網頁等不同平台，各平台之隱私權政策、資料存放地區與使用條款，請使用者自行參閱該平台或建置單位提供之說明。</li>
+          <li>確吧提供之回答僅供參考，不具正式公文或官方承諾效力。正式規定、申請資格、期限等重要事項，仍請以各單位官方公告或正式諮詢管道為準，不得逕以確吧回覆作為最終依據。</li>
+          <li>「驗證星系」標章僅代表該確吧於特定測試時間點，通過本平台團隊設計之品質與法規測試，不代表對後續內容變更、平台調整或使用結果之保證。</li>
+          <li>本平台保留隨時調整、新增、下架各確吧或本服務內容之權利，且毋須事先通知使用者。無論任何情形，對於服務調整或停止，本平台對任何使用者或第三人均不負賠償責任。</li>
+        </ol>
+      </div>
+    </details>
+  </footer>
 
 </div>
 
