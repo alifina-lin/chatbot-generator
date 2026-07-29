@@ -485,18 +485,6 @@ main { padding: 34px 40px 48px; }
   background: #eff6ff;
 }
 
-.login-hint {
-  font-size: 12px;
-  font-weight: 800;
-  color: #92400e;
-  background: #fef3c7;
-  border: 1px dashed #d97706;
-  border-radius: 4px;
-  padding: 6px 10px;
-  margin-bottom: 10px;
-  cursor: help;
-}
-
 .launch {
   display: block;
   text-align: center;
@@ -510,6 +498,54 @@ main { padding: 34px 40px 48px; }
   text-decoration: none;
   margin-top: 12px;
   box-shadow: 4px 4px 0 rgba(0,0,0,.25);
+  position: relative;
+}
+
+.has-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 2;
+}
+
+.has-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e293b;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 2;
+}
+
+.has-tooltip:hover::after,
+.has-tooltip:hover::before {
+  opacity: 1;
+}
+
+.updated-line {
+  margin-top: 10px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
 }
 
 .detail {

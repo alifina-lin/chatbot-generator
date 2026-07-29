@@ -1,6 +1,6 @@
 // ===== 設定區 =====
 // 把下面換成你部署 Code.gs 後拿到的 Web App 網址（結尾是 /exec）
-const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxdhaI1Y9iEieUXTiHmvgK2l1FJEAJPOpNxSv7JGm7J3ZiD_3oIaHdibr7vPFcOzIO56g/exec';
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxFuQEWscNJNyA1qmzs0G967Z2954-6dWtwBn60plrklUqOX8MUIVvG0wGFkoCGVGWJZA/exec';
 
 let allBots = [];
 let currentAudience = 'all';
@@ -140,21 +140,22 @@ function render() {
   verifiedGrid.innerHTML = '';
   verifiedEmpty.style.display = verifiedBots.length ? 'none' : 'block';
   verifiedCount.textContent = verifiedBots.length ? `· ${verifiedBots.length} 個確吧已升級` : '';
-  verifiedBots.forEach((bot, i) => verifiedGrid.appendChild(buildPod(bot, i + 1)));
+  verifiedBots.forEach(bot => verifiedGrid.appendChild(buildPod(bot)));
 
   // Beta 星系
   grid.innerHTML = '';
   empty.style.display = betaBots.length ? 'none' : 'block';
   betaCount.textContent = betaBots.length ? `· ${betaBots.length} 個確吧` : '';
-  betaBots.forEach((bot, i) => grid.appendChild(buildPod(bot, i + 1)));
+  betaBots.forEach(bot => grid.appendChild(buildPod(bot)));
 }
 
-function buildPod(bot, number) {
+function buildPod(bot) {
   const pod = document.createElement('article');
   pod.className = 'pod' + (isVerified(bot.status) ? ' verified' : '');
+  const numberLabel = formatNumber(bot.number);
 
   pod.innerHTML = `
-    ${number ? `<div class="pod-number">No.${String(number).padStart(2, '0')}</div>` : ''}
+    ${numberLabel ? `<div class="pod-number">No.${numberLabel}</div>` : ''}
     ${isVerified(bot.status) ? '<div class="verified-badge">✅ 已驗證</div>' : ''}
     <div class="platform">${escapeHtml(bot.platform)}</div>
     <div class="pod-title">${escapeHtml(bot.name)}</div>
@@ -165,9 +166,7 @@ function buildPod(bot, number) {
       ${splitText(bot.audience).map(tag).join('')}
     </div>
 
-    ${needsGoogleLogin(bot.platform) ? '<div class="login-hint" title="此確吧使用 Google Gemini Gem 建置，開啟後可能需要先登入 Google 帳號才能對話">🔑 可能需登入 Google 帳號</div>' : ''}
-
-    <a class="launch" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
+    <a class="launch${needsGoogleLogin(bot.platform) ? ' has-tooltip' : ''}" ${needsGoogleLogin(bot.platform) ? 'data-tooltip="🔑 可能需登入 Google 帳號才能使用"' : ''} href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
 
     <details class="detail">
       <summary>查看詳細資訊</summary>
@@ -175,11 +174,19 @@ function buildPod(bot, number) {
       <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
       <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
       <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
-      <div><strong>🗓 更新日期：</strong>${escapeHtml(bot.updatedAt || '未填寫')}</div>
     </details>
+
+    ${bot.updatedAt ? `<div class="updated-line">${escapeHtml(bot.updatedAt)} updated</div>` : ''}
   `;
 
   return pod;
+}
+
+function formatNumber(value) {
+  const s = String(value || '').trim();
+  if (!s) return '';
+  const n = Number(s);
+  return Number.isFinite(n) ? String(n).padStart(2, '0') : s;
 }
 
 function needsGoogleLogin(platform) {
