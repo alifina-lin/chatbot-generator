@@ -5,8 +5,16 @@ const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxFuQEWscNJNyA1qmzs
 let allBots = [];
 let currentAudience = 'all';
 let currentCategory = 'all';
+let bm25Index = null; // 語意推薦用的 BM25 倒排索引，載入 bots-index.json 後才會有
+let lastSubstringHasResults = true; // render() 每次都更新；決定 renderRecommend() 查無時是隱藏還是顯示引導文字
+
+// 每次 renderRecommend() 都更新這個全域狀態（零延遲、每個按鍵都跑），
+// 但實際送 GA4 事件是 analytics.js 用 debounce + IME 組字保護後才讀這裡送出，
+// 避免搜尋沒打完（尤其注音/拼音組字中間態）就把半成品 query 記進日誌。
+window.__searchState = null;
 
 fetchChatbots();
+loadBotsIndex();
 
 function fetchChatbots() {
   showSkeleton();
@@ -58,6 +66,20 @@ function showSkeleton(count = 6) {
   verifiedGrid.innerHTML = '';
 }
 
+// 語意推薦是額外一塊，不是主資料流程的一部分：載入失敗只是沒有推薦區塊，
+// 子字串篩選（render()）完全不受影響，這是刻意設計的降級路徑。
+function loadBotsIndex() {
+  fetch('bots-index.json')
+    .then(res => res.json())
+    .then(data => {
+      bm25Index = BM25Search.buildIndex(data);
+      renderRecommend(); // 索引可能在使用者已經打完字之後才載完，補跑一次
+    })
+    .catch(err => {
+      console.error('語意推薦索引載入失敗，僅使用子字串篩選：', err);
+    });
+}
+
 function init(data) {
   allBots = data || [];
   buildCategoryFilters();
@@ -97,7 +119,10 @@ document.getElementById('audienceFilters').addEventListener('click', e => {
   render();
 });
 
-document.getElementById('search').addEventListener('input', render);
+document.getElementById('search').addEventListener('input', () => {
+  render();
+  renderRecommend(); // 零延遲的 BM25 檢索，不需要 debounce
+});
 
 function render() {
   const keyword = document.getElementById('search').value.trim().toLowerCase();
@@ -133,6 +158,8 @@ function render() {
     return matchKeyword && matchAudience && matchCategory;
   });
 
+  lastSubstringHasResults = filtered.length > 0;
+
   const verifiedBots = filtered.filter(bot => isVerified(bot.status));
   const betaBots = filtered.filter(bot => !isVerified(bot.status));
 
@@ -147,6 +174,74 @@ function render() {
   empty.style.display = betaBots.length ? 'none' : 'block';
   betaCount.textContent = betaBots.length ? `· ${betaBots.length} 個確吧` : '';
   betaBots.forEach(bot => grid.appendChild(buildPod(bot)));
+}
+
+// 「確吧頭子的建議」：純靜態 BM25 語意檢索，跟上面的子字串篩選是兩條獨立路徑，
+// 子字串篩選永遠先跑、永遠可用；這裡失敗或沒結果都不影響上面的清單。
+// 這個函式只管畫面（每個按鍵都跑，零延遲），GA4 事件交給 analytics.js 用 debounce 另外處理。
+function renderRecommend() {
+  const section = document.getElementById('recommend');
+  const grid = document.getElementById('recommendGrid');
+  const empty = document.getElementById('recommendEmpty');
+  const query = document.getElementById('search').value.trim();
+
+  // 索引還沒載入完成，或輸入還不到 2 字：不顯示這個區塊，不留一半空白的區塊
+  if (!bm25Index || query.length < 2) {
+    section.style.display = 'none';
+    window.__searchState = null;
+    return;
+  }
+
+  const ranked = BM25Search.search(bm25Index, query);
+  const topScore = ranked.length ? ranked[0].normalizedScore : 0;
+  const candidates = ranked
+    .filter(r => r.normalizedScore >= BM25Search.NO_RESULT_THRESHOLD)
+    .slice(0, 3)
+    // 前端層再驗證一次 bot_id 存在於目前的 allBots：索引檔跟 GAS 現況之間可能有時間差
+    // （例如某支剛下架，索引還沒重生成），寧可少推薦一支也不能推薦到死連結。
+    .map(r => ({ ...r, bot: allBots.find(b => String(b.number) === String(r.bot_id)) }))
+    .filter(r => r.bot);
+
+  window.__searchState = {
+    query,
+    hitCount: candidates.length,
+    topScore: Number(topScore.toFixed(3)),
+    substringHasResults: lastSubstringHasResults,
+  };
+
+  if (candidates.length === 0) {
+    grid.innerHTML = '';
+    // 子字串篩選那條路已經有結果了：這個區塊整個藏起來，不要疊一句「查無」在一份已有結果的畫面上。
+    // 只有兩條路都沒東西時，才用這個區塊講清楚「真的沒有」。
+    if (lastSubstringHasResults) {
+      section.style.display = 'none';
+      empty.style.display = 'none';
+      return;
+    }
+    section.style.display = 'block';
+    empty.style.display = 'block';
+    empty.textContent = '🤖 目前沒有對應的確吧，建議直接洽詢相關單位窗口，或到下方瀏覽全部確吧。';
+    return;
+  }
+
+  section.style.display = 'block';
+  empty.style.display = 'none';
+  grid.innerHTML = '';
+  candidates.forEach(({ bot }) => grid.appendChild(buildRecommendCard(bot)));
+}
+
+function buildRecommendCard(bot) {
+  const card = document.createElement('article');
+  card.className = 'pod recommend-card';
+
+  card.innerHTML = `
+    <div class="platform">${escapeHtml(bot.platform)}</div>
+    <div class="pod-title">${escapeHtml(bot.name)}</div>
+    <div class="brief">${escapeHtml(bot.brief)}</div>
+    <a class="launch recommend-launch${needsGoogleLogin(bot.platform) ? ' has-tooltip' : ''}" ${needsGoogleLogin(bot.platform) ? 'data-tooltip="🔑 可能需登入 Google 帳號才能使用"' : ''} data-bot-id="${escapeAttr(bot.number)}" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
+  `;
+
+  return card;
 }
 
 function buildPod(bot) {

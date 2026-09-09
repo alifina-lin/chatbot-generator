@@ -436,6 +436,55 @@ main { padding: 34px 40px 48px; }
   .verified-section { padding: 24px 20px; }
 }
 
+/* ===== 確吧頭子的建議（純靜態 BM25 語意推薦，跟一般卡片有區隔但不搶眼）===== */
+.recommend-section {
+  max-width: 1180px;
+  margin: 0 auto 8px;
+  padding: 22px 32px 26px;
+  position: relative;
+  z-index: 1;
+  border: 3px solid var(--blue2);
+  outline: 3px solid rgba(56,189,248,.35);
+  background:
+    linear-gradient(90deg, rgba(56,189,248,.05) 1px, transparent 1px),
+    linear-gradient(rgba(56,189,248,.05) 1px, transparent 1px),
+    rgba(2, 6, 23, .4);
+  background-size: 14px 14px, 14px 14px, auto;
+}
+
+.recommend-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: var(--blue2);
+  text-shadow: 2px 2px 0 rgba(0,0,0,.3);
+}
+
+.recommend-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.recommend-card {
+  padding: 14px;
+  box-shadow: 5px 5px 0 rgba(0,0,0,.22);
+}
+
+.recommend-card .pod-title { font-size: 18px; padding-right: 0; }
+.recommend-card .brief { min-height: 0; margin-bottom: 10px; }
+
+.recommend-empty {
+  padding: 18px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #bae6fd;
+}
+
+@media (max-width: 900px) {
+  .recommend-section { padding: 18px 18px 22px; margin: 0 16px 8px; }
+  .recommend-grid { grid-template-columns: 1fr; }
+}
+
 .pod-title {
   font-size: 24px;
   font-weight: 1000;
