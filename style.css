@@ -40,6 +40,10 @@ header {
   padding: 0 40px;
   background: rgba(2, 6, 23, .84);
   border-bottom: 2px solid rgba(255,255,255,.12);
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  backdrop-filter: blur(6px);
 }
 
 .brand {
@@ -59,6 +63,7 @@ header {
 
 nav {
   display: flex;
+  align-items: center;
   gap: 28px;
   font-weight: 800;
 }
@@ -73,6 +78,20 @@ nav a.active {
   color: var(--yellow);
   border-bottom: 3px solid var(--yellow);
   padding-bottom: 20px;
+}
+
+.nav-item-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.nav-subtle {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: .6;
 }
 
 .pixel-logo {
@@ -692,6 +711,23 @@ main { padding: 34px 40px 48px; }
   box-shadow: 4px 4px 0 rgba(0,0,0,.28);
 }
 
+.tool-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.tool-list a.tool-secondary {
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  background: transparent;
+  color: rgba(255,255,255,.7);
+  border: 1px dashed rgba(255,255,255,.35);
+  box-shadow: none;
+}
+
 .site-footer {
   padding: 20px 40px 32px;
   border-top: 1px solid rgba(255,255,255,.1);
@@ -726,4 +762,122 @@ main { padding: 34px 40px 48px; }
 
 @media (max-width: 900px) {
   .site-footer { padding: 16px 20px 28px; }
+}
+
+/* ===== 浮動搜尋 ===== */
+.floating-search {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 140px));
+  z-index: 250;
+}
+
+.floating-search[hidden] { display: none; }
+
+.floating-search input {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 50px 14px 22px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 10px 28px rgba(0,0,0,.4), 0 0 0 3px rgba(255,255,255,.15);
+}
+
+.floating-search .search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--line);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* ===== 浮動 Bot ===== */
+.floating-bot {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 260;
+}
+
+.floating-bot-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #1e3a8a;
+  background: var(--yellow);
+  color: #111827;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-bot-btn:hover {
+  transform: translateY(-2px);
+}
+
+.floating-bot-chat {
+  position: fixed;
+  right: 28px;
+  bottom: 104px;
+  width: 380px;
+  height: 540px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 140px);
+  background: #fff;
+  border: 3px solid #1e3a8a;
+  border-radius: 12px;
+  box-shadow: 8px 8px 0 rgba(0,0,0,.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.floating-bot-chat[hidden] { display: none; }
+
+.floating-bot-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--navy2);
+  color: #fff;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.floating-bot-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.floating-bot-chat iframe {
+  flex: 1;
+  width: 100%;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .floating-search { width: calc(100vw - 120px); bottom: 18px; }
+  .floating-bot { right: 16px; bottom: 16px; }
+  .floating-bot-btn { width: 56px; height: 56px; font-size: 26px; }
+  .floating-bot-chat {
+    right: 16px;
+    bottom: 84px;
+    width: calc(100vw - 32px);
+    height: calc(100vh - 160px);
+  }
 }

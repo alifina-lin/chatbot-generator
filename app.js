@@ -97,7 +97,53 @@ document.getElementById('audienceFilters').addEventListener('click', e => {
   render();
 });
 
-document.getElementById('search').addEventListener('input', render);
+const searchInput = document.getElementById('search');
+const floatingSearchInput = document.getElementById('searchFloating');
+
+function syncSearch(value) {
+  searchInput.value = value;
+  if (floatingSearchInput) floatingSearchInput.value = value;
+  render();
+}
+
+searchInput.addEventListener('input', () => syncSearch(searchInput.value));
+if (floatingSearchInput) {
+  floatingSearchInput.addEventListener('input', () => syncSearch(floatingSearchInput.value));
+}
+
+const heroSearchWrap = document.querySelector('.search-wrap');
+const floatingSearch = document.getElementById('floatingSearch');
+if (heroSearchWrap && floatingSearch && 'IntersectionObserver' in window) {
+  new IntersectionObserver(([entry]) => {
+    floatingSearch.hidden = entry.isIntersecting;
+  }, { threshold: 0 }).observe(heroSearchWrap);
+}
+
+const floatingBotBtn = document.getElementById('floatingBotBtn');
+const floatingBotChat = document.getElementById('floatingBotChat');
+const floatingBotClose = document.getElementById('floatingBotClose');
+const floatingBotIframe = document.getElementById('floatingBotIframe');
+
+function openFloatingBot() {
+  if (floatingBotIframe && !floatingBotIframe.getAttribute('src')) {
+    floatingBotIframe.setAttribute('src', floatingBotIframe.dataset.src);
+  }
+  floatingBotChat.hidden = false;
+}
+
+function closeFloatingBot() {
+  floatingBotChat.hidden = true;
+}
+
+if (floatingBotBtn) {
+  floatingBotBtn.addEventListener('click', () => {
+    if (floatingBotChat.hidden) openFloatingBot();
+    else closeFloatingBot();
+  });
+}
+if (floatingBotClose) {
+  floatingBotClose.addEventListener('click', closeFloatingBot);
+}
 
 function render() {
   const keyword = document.getElementById('search').value.trim().toLowerCase();
