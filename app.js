@@ -289,3 +289,27 @@ function scrollToBeta() {
   if (!beta) return;
   beta.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+const navLinksByTarget = {};
+document.querySelectorAll('nav a[data-nav-target]').forEach(a => {
+  const key = a.dataset.navTarget;
+  (navLinksByTarget[key] ||= []).push(a);
+});
+
+function setActiveNavSection(key) {
+  document.querySelectorAll('nav a[data-nav-target]').forEach(a => a.classList.remove('active'));
+  (navLinksByTarget[key] || []).forEach(a => a.classList.add('active'));
+}
+
+if ('IntersectionObserver' in window) {
+  const navSectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActiveNavSection(entry.target.id);
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+  ['home', 'verified', 'beta', 'about'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) navSectionObserver.observe(el);
+  });
+}

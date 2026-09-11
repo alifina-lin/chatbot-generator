@@ -22,18 +22,15 @@
       <span>確吧宇宙 <small>Chatbot Universe</small></span>
     </div>
     <nav>
-      <a class="active" href="#">首頁</a>
-      <a href="javascript:void(0)" onclick="scrollToVerified()">🌟 驗證星系</a>
-      <a href="javascript:void(0)" onclick="scrollToBeta()">🪐 Beta 星系</a>
-      <div class="nav-item-stack">
-        <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
-        <a class="nav-subtle" href="https://gemini.google.com/gem/859f98df8355?usp=sharing" target="_blank">確吧第二入口</a>
-      </div>
-      <a href="javascript:void(0)" onclick="scrollToAbout()">關於我們</a>
+      <a class="active" href="#" data-nav-target="home">首頁</a>
+      <a href="javascript:void(0)" onclick="scrollToVerified()" data-nav-target="verified">🌟 驗證星系</a>
+      <a href="javascript:void(0)" onclick="scrollToBeta()" data-nav-target="beta">🪐 Beta 星系</a>
+      <a href="javascript:void(0)" onclick="scrollToAbout()" data-nav-target="about">打造確吧</a>
+      <a href="javascript:void(0)" onclick="scrollToAbout()" data-nav-target="about">關於我們</a>
     </nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="home">
     <div class="stars"></div>
     <div class="hero-rocket">
       <div class="body"></div>
@@ -107,11 +104,29 @@
       <p class="team">我們是政大2026 行政AI競賽團隊——懶得剛剛好</p>
       <p>希望藉由 AI 協助大家從重複、繁瑣的行政日常中解放出來。</p>
 
-      <div class="tool-list">
-        <div class="tool-primary">
-          <a href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">打造確吧</a>
-          <a class="tool-secondary" href="https://gemini.google.com/gem/859f98df8355?usp=sharing" target="_blank">確吧第二入口</a>
+      <h2 class="tool-heading">打造確吧</h2>
+      <div class="tool-cards">
+        <div class="tool-card">
+          <h3 class="tool-card-title">建置工具</h3>
+          <p class="tool-instructions">點擊下方「確吧」，立即進入建置流程：匯入核心業務文件、回答幾個問題，依照說明完成你的Chatbot：</p>
+          <div class="tool-card-actions">
+            <a class="btn-cta" href="https://copilotstudio.microsoft.com/environments/Default-35157425-5c3c-4672-aaa4-68fb6a8c9612/bots/cr316_ABCChatbotBuilder/canvas?__version__=2&enableFileAttachment=true&tenantId=35157425-5c3c-4672-aaa4-68fb6a8c9612" target="_blank">🚀 確吧</a>
+            <a class="tool-inline-link" href="https://gemini.google.com/gem/859f98df8355?usp=sharing" target="_blank">確吧第二入口</a>
+          </div>
         </div>
+        <div class="tool-card">
+          <h3 class="tool-card-title">線上課程</h3>
+          <div class="course-info">
+            <div class="course-title">🎓 AI 實作工作坊：從零完成業務 Chatbot（課程編號 501）</div>
+            <div class="course-platform">政大微課程平台</div>
+          </div>
+          <div class="tool-card-actions">
+            <a class="btn-cta" href="https://micro.video.nccu.edu.tw/course/syllabus?courseId=501" target="_blank">前往課程頁面 →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-list">
         <a href="https://forms.gle/z8q9775oy5MedhAU7" target="_blank">確吧宇宙 Beta 星系登錄表</a>
         <a href="https://alifina-lin.github.io/chatbot-plugin-generator/" target="_blank">Chatbot 嵌入網頁產生器</a>
       </div>
