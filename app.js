@@ -220,6 +220,7 @@ function buildPod(bot) {
       <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
       <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
       <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
+      ${bot.number ? `<div class="mission-link-row"><a class="mission-link" href="bots/${escapeAttr(bot.number)}.html">📡 任務詳情</a></div>` : ''}
     </details>
 
     ${bot.updatedAt ? `<div class="updated-line">${escapeHtml(bot.updatedAt)} updated</div>` : ''}
