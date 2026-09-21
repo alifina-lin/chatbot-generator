@@ -252,6 +252,19 @@ h1 .yellow { color: var(--yellow); }
   font-weight: 900;
 }
 
+.search-feedback {
+  max-width: 620px;
+  margin: -4px auto 18px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: #7dd3fc;
+  position: relative;
+  z-index: 1;
+}
+
+.search-feedback[hidden] { display: none; }
+
 .filters {
   display: flex;
   justify-content: center;
@@ -593,6 +606,30 @@ main { padding: 34px 40px 48px; }
   border-radius: 12px;
 }
 
+.empty p { margin: 0 0 14px; }
+
+/* ===== 搜尋／篩選態合併結果區 ===== */
+.results-section {
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+.results-divider {
+  margin: 8px 0 26px;
+  padding-top: 18px;
+  border-top: 2px dashed rgba(255,255,255,.25);
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  color: #7dd3fc;
+}
+
+.clear-filters-btn {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+}
+
 .pod.skeleton {
   cursor: default;
   pointer-events: none;
@@ -848,6 +885,20 @@ main { padding: 34px 40px 48px; }
 }
 
 .floating-search[hidden] { display: none; }
+
+.floating-search-row { position: relative; }
+
+.search-feedback-floating {
+  margin: 8px auto 0;
+  font-size: 13px;
+  text-align: center;
+  width: fit-content;
+  max-width: 100%;
+  background: rgba(7, 24, 61, .88);
+  border-radius: 999px;
+  padding: 6px 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
 
 .floating-search input {
   width: 100%;

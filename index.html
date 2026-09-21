@@ -47,6 +47,8 @@
       <span class="search-icon">⌕</span>
     </div>
 
+    <div id="searchFeedback" class="search-feedback" hidden></div>
+
     <div class="filters">
       <div class="filter-group">
         <div class="filter-title">服務對象</div>
@@ -68,6 +70,17 @@
   </section>
 
   <main>
+    <section id="results" class="results-section" hidden>
+      <div class="section-title" id="resultsTitle">🔍 搜尋結果</div>
+      <div id="resultsVerifiedGrid" class="grid verified-grid"></div>
+      <div class="results-divider" id="resultsDivider" hidden>以下為 Beta 星系 · 尚未通過驗證測試</div>
+      <div id="resultsBetaGrid" class="grid"></div>
+      <div id="resultsEmpty" class="empty" hidden>
+        <p>沒有符合條件的確吧，試試其他關鍵字或清除篩選條件</p>
+        <button id="clearFiltersBtn" class="btn-cta clear-filters-btn" type="button">清除條件</button>
+      </div>
+    </section>
+
     <section id="verified" class="verified-section">
       <div class="verified-header">
         <div class="section-title verified-title">🌟 驗證星系 <span class="verified-count" id="verifiedCount"></span></div>
@@ -149,8 +162,11 @@
   </footer>
 
   <div id="floatingSearch" class="floating-search" hidden>
-    <input id="searchFloating" type="text" placeholder="搜尋 Chatbot 名稱或功能...">
-    <span class="search-icon">⌕</span>
+    <div class="floating-search-row">
+      <input id="searchFloating" type="text" placeholder="搜尋 Chatbot 名稱或功能...">
+      <span class="search-icon">⌕</span>
+    </div>
+    <div id="searchFeedbackFloating" class="search-feedback search-feedback-floating" hidden></div>
   </div>
 
   <div class="floating-bot">

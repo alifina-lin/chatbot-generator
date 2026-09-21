@@ -2,9 +2,33 @@
 // 把下面換成你部署 Code.gs 後拿到的 Web App 網址（結尾是 /exec）
 const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxFuQEWscNJNyA1qmzs0G967Z2954-6dWtwBn60plrklUqOX8MUIVvG0wGFkoCGVGWJZA/exec';
 
+// ===== 業務分類收斂表（前端規則，不動 GAS / Sheet / 索引） =====
+const CATEGORY_GROUPS = [
+  { name: '場地與設備',     values: ['場地借用','場地租借','教室設備','會議展演空間','圖書館場地借用服務','拍攝申請','設備借用','消防安全設備'],
+                            keywords: ['場地','教室','空間','借用','租借','設備','拍攝','會議室'] },
+  { name: '經費與核銷',     values: ['系所核銷業務','社團核銷','經費報支','財務','主計','核銷','經費動支','所得稅'],
+                            keywords: ['核銷','經費','報支','財務','主計','出納','請購','動支','所得稅'] },
+  { name: '選課與學程',     values: ['通識教育','選課認抵','雙主修制度','校學士申請','學程申請','微學程','選課操作說明','教育學院學程事務'],
+                            keywords: ['選課','學程','通識','雙主修','輔系','抵免','認抵'] },
+  { name: '修業與學位',     values: ['論文輔導','學位考試','論文口試','修業問題','考試與畢業流程','博士班系務','入學'],
+                            keywords: ['論文','學位','口試','畢業','修業','入學','博士','碩士'] },
+  { name: '國際與兩岸',     values: ['校級中國大陸交換甄試','來校大陸交換生指引','兩岸交流','入臺證申辦','兩岸學術交流','學生交換業務','出國交換'],
+                            keywords: ['國際','交換','兩岸','大陸','入臺','境外','僑生','外籍'] },
+  { name: '學務與校園生活', values: ['學生事務','新生活動','導師制業務','宿舍','新生入住','停車'],
+                            keywords: ['宿舍','住宿','社團','學生事務','新生','導師','停車'] },
+  { name: '教學與學習支援', values: ['學術寫作','數位教學','教學影片拍攝製作協助','圖書館服務'],
+                            keywords: ['教學','寫作','圖書','數位學習','教材'] },
+  { name: '資訊服務',       values: ['資訊服務','資訊設備'],
+                            keywords: ['資訊','網路','帳號','系統','電算'] },
+  { name: '獎助與職涯',     values: ['獎助學金業務','獎勵申請','職涯資源'],
+                            keywords: ['獎助','獎學金','獎勵','職涯','就業','實習'] },
+];
+const OTHER_GROUP = '其他';
+
 let allBots = [];
 let currentAudience = 'all';
 let currentCategory = 'all';
+let hasAutoScrolledToResults = false;
 
 fetchChatbots();
 
@@ -64,19 +88,62 @@ function init(data) {
   render();
 }
 
+function isDebugMode() {
+  return new URLSearchParams(location.search).has('debug');
+}
+
+// 精確映射優先於關鍵字兜底；都不中歸「其他」
+function groupOfRaw(raw) {
+  const value = String(raw || '').trim();
+  if (!value) return OTHER_GROUP;
+
+  for (const group of CATEGORY_GROUPS) {
+    if (group.values.includes(value)) return group.name;
+  }
+  for (const group of CATEGORY_GROUPS) {
+    if (group.keywords.some(kw => value.includes(kw))) return group.name;
+  }
+  return OTHER_GROUP;
+}
+
+function groupsOfBot(bot) {
+  return [...new Set(splitText(bot.category).map(groupOfRaw))];
+}
+
 function buildCategoryFilters() {
   const box = document.getElementById('categoryFilters');
-  const categories = [...new Set(
-    allBots
-      .flatMap(bot => splitText(bot.category))
-      .filter(Boolean)
-  )];
 
-  categories.forEach(cat => {
+  const counts = new Map();
+  allBots.forEach(bot => {
+    groupsOfBot(bot).forEach(group => {
+      counts.set(group, (counts.get(group) || 0) + 1);
+    });
+  });
+
+  if (isDebugMode()) {
+    const others = [];
+    allBots.forEach(bot => {
+      splitText(bot.category).forEach(raw => {
+        if (groupOfRaw(raw) === OTHER_GROUP) others.push({ raw, name: bot.name });
+      });
+    });
+    if (others.length) console.log('[確吧宇宙] 落入「其他」分類的原始值：', others);
+  }
+
+  const groupNames = CATEGORY_GROUPS.map(g => g.name).concat(OTHER_GROUP);
+  const sorted = groupNames
+    .filter(name => counts.get(name) > 0)
+    .sort((a, b) => {
+      if (a === OTHER_GROUP) return 1;
+      if (b === OTHER_GROUP) return -1;
+      return counts.get(b) - counts.get(a);
+    });
+
+  sorted.forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'chip';
-    btn.dataset.value = cat;
-    btn.textContent = cat;
+    btn.dataset.value = name;
+    btn.textContent = `${name} ${counts.get(name)}`;
     box.appendChild(btn);
   });
 
@@ -145,6 +212,11 @@ if (floatingBotClose) {
   floatingBotClose.addEventListener('click', closeFloatingBot);
 }
 
+function isFiltering() {
+  const keyword = document.getElementById('search').value.trim();
+  return keyword !== '' || currentAudience !== 'all' || currentCategory !== 'all';
+}
+
 function render() {
   const keyword = document.getElementById('search').value.trim().toLowerCase();
   const grid = document.getElementById('grid');
@@ -174,7 +246,7 @@ function render() {
 
     const matchCategory =
       currentCategory === 'all' ||
-      splitText(bot.category).some(c => c.includes(currentCategory) || currentCategory.includes(c));
+      groupsOfBot(bot).includes(currentCategory);
 
     return matchKeyword && matchAudience && matchCategory;
   });
@@ -182,18 +254,80 @@ function render() {
   const verifiedBots = filtered.filter(bot => isVerified(bot.status));
   const betaBots = filtered.filter(bot => !isVerified(bot.status));
 
-  // 驗證星系
+  // 驗證星系（瀏覽態）
   verifiedGrid.innerHTML = '';
   verifiedEmpty.style.display = verifiedBots.length ? 'none' : 'block';
   verifiedCount.textContent = verifiedBots.length ? `· ${verifiedBots.length} 個確吧已升級` : '';
   verifiedBots.forEach(bot => verifiedGrid.appendChild(buildPod(bot)));
 
-  // Beta 星系
+  // Beta 星系（瀏覽態）
   grid.innerHTML = '';
   empty.style.display = betaBots.length ? 'none' : 'block';
   betaCount.textContent = betaBots.length ? `· ${betaBots.length} 個確吧` : '';
   betaBots.forEach(bot => grid.appendChild(buildPod(bot)));
+
+  // 篩選態合併結果區
+  const filtering = isFiltering();
+  document.getElementById('verified').hidden = filtering;
+  document.getElementById('beta').hidden = filtering;
+  document.getElementById('results').hidden = !filtering;
+
+  if (filtering) {
+    const resultsVerifiedGrid = document.getElementById('resultsVerifiedGrid');
+    const resultsBetaGrid = document.getElementById('resultsBetaGrid');
+    const resultsDivider = document.getElementById('resultsDivider');
+    const resultsEmpty = document.getElementById('resultsEmpty');
+
+    resultsVerifiedGrid.innerHTML = '';
+    resultsBetaGrid.innerHTML = '';
+    verifiedBots.forEach(bot => resultsVerifiedGrid.appendChild(buildPod(bot)));
+    betaBots.forEach(bot => resultsBetaGrid.appendChild(buildPod(bot)));
+
+    resultsDivider.hidden = !(verifiedBots.length && betaBots.length);
+    resultsEmpty.hidden = (verifiedBots.length + betaBots.length) > 0;
+  }
+
+  updateSearchFeedback(filtering, verifiedBots.length, betaBots.length);
+  maybeAutoScrollToResults(filtering);
 }
+
+function updateSearchFeedback(filtering, verifiedCount, betaCount) {
+  const feedback = document.getElementById('searchFeedback');
+  const feedbackFloating = document.getElementById('searchFeedbackFloating');
+  if (!filtering) {
+    feedback.hidden = true;
+    feedbackFloating.hidden = true;
+    return;
+  }
+  const total = verifiedCount + betaCount;
+  const text = total ? `找到 ${total} 個確吧 · 驗證 ${verifiedCount} / Beta ${betaCount}` : '找到 0 個確吧';
+  feedback.textContent = text;
+  feedback.hidden = false;
+  feedbackFloating.textContent = text;
+  feedbackFloating.hidden = false;
+}
+
+function maybeAutoScrollToResults(filtering) {
+  if (!filtering) {
+    hasAutoScrolledToResults = false;
+    return;
+  }
+  if (hasAutoScrolledToResults) return;
+  hasAutoScrolledToResults = true;
+  const results = document.getElementById('results');
+  if (results) results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function clearFilters() {
+  currentAudience = 'all';
+  currentCategory = 'all';
+  document.querySelectorAll('#audienceFilters .chip').forEach(b => b.classList.toggle('active', b.dataset.value === 'all'));
+  document.querySelectorAll('#categoryFilters .chip').forEach(b => b.classList.toggle('active', b.dataset.value === 'all'));
+  syncSearch('');
+}
+
+const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
 
 function buildPod(bot) {
   const pod = document.createElement('article');
@@ -209,7 +343,7 @@ function buildPod(bot) {
 
     <div class="tags">
       ${tag(bot.unit)}
-      ${splitText(bot.audience).map(tag).join('')}
+      ${splitText(bot.category).map(tag).join('')}
     </div>
 
     <a class="launch${needsGoogleLogin(bot.platform) ? ' has-tooltip' : ''}" ${needsGoogleLogin(bot.platform) ? 'data-tooltip="🔑 可能需登入 Google 帳號才能使用"' : ''} href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
@@ -218,6 +352,7 @@ function buildPod(bot) {
       <summary>查看詳細資訊</summary>
       <div><strong>可以協助：</strong>${escapeHtml(bot.help || '未填寫')}</div>
       <div><strong>適用情境：</strong>${escapeHtml(bot.scenario || '未填寫')}</div>
+      <div><strong>服務對象：</strong>${escapeHtml(bot.audience || '未填寫')}</div>
       <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
       <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
       ${bot.number ? `<div class="mission-link-row"><a class="mission-link" href="bots/${escapeAttr(bot.number)}.html">📡 任務詳情</a></div>` : ''}
@@ -279,12 +414,14 @@ function scrollToAbout() {
 }
 
 function scrollToVerified() {
+  clearFilters();
   const verified = document.getElementById('verified');
   if (!verified) return;
   verified.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function scrollToBeta() {
+  clearFilters();
   const beta = document.getElementById('beta');
   if (!beta) return;
   beta.scrollIntoView({ behavior: 'smooth', block: 'start' });
