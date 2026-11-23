@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gem 搬家導覽</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
 /* Layout: one stage (mock screen + moving cursor) over a caption card with a per-step checklist. Frames autoplay; chips jump between groups. */
@@ -97,13 +98,10 @@ details summary{cursor:pointer;font-weight:700}
 details ol{margin:10px 0 0;padding-left:1.3em}
 details li{margin:4px 0}
 .foot{font-size:.82rem;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.on,.state .dot{animation:none}#cursor{transition:none}}
 body{margin:0}
-[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.on,.state .dot{animation:none}#cursor{transition:none}}
 </style>
 
-</head>
-<body>
 <div class="wrap">
   <header>
     <h1>Gem 搬家到 Gemini Notebook</h1>
@@ -127,14 +125,14 @@ body{margin:0}
             <div class="srow">▫　媒體庫</div>
             <div class="srow">◷　已排定</div>
             <div class="srow">◈　學生</div>
-            <div class="srow" data-t="more">…　顯示更多</div>
             <p class="lbl" style="margin:14px 12px 4px">筆記本</p>
             <div class="srow">＋　新增筆記本</div>
             <div class="srow" style="opacity:.6">□　（其他筆記本）</div>
             <div class="srow" style="opacity:.6">□　（其他筆記本）</div>
+            <div class="srow" data-t="more" style="position:absolute;right:8px;bottom:8px">⚙　設定</div>
           </div>
           <div class="abs" style="left:190px;top:36px;right:0;bottom:0;display:flex;align-items:center;justify-content:center;opacity:.5;font-size:20px">你想從哪裡開始？</div>
-          <div class="pop menu" id="moremenu" style="left:160px;top:172px;width:150px"><div>⚙　自訂</div><div data-t="gemitem">◇　Gem</div></div>
+          <div class="pop menu" id="moremenu" style="left:36px;bottom:48px;width:150px"><div>⚙　自訂</div><div data-t="gemitem">◇　Gem</div></div>
         </div>
 
         <!-- 備份：Gem 列表 -->
@@ -320,6 +318,7 @@ body{margin:0}
     <ol id="textlist"></ol>
   </details>
   <p class="foot">有任何問題，直接回信告訴「懶得剛剛好」團隊。</p>
+  <p class="foot" style="margin-top:4px;opacity:.7">2026-11-23 updated</p>
 </div>
 
 <script>
@@ -335,7 +334,7 @@ body{margin:0}
   ];
   var F=[
     {g:'bk',s:'gemhome',t:['acct1'],l:'登入 Gem 的帳號',x:'用當初建立 Gem 的那個帳號登入 gemini.google.com。'},
-    {g:'bk',s:'gemhome',t:['more'],l:'點左邊「顯示更多」',x:'點左邊側欄的「顯示更多」。'},
+    {g:'bk',s:'gemhome',t:['more'],l:'點左下方齒輪符號',x:'點左下方的齒輪符號。'},
     {g:'bk',s:'gemhome',t:['gemitem'],o:['moremenu'],l:'點「Gem」',x:'在跳出的選單點「Gem」，進入 Gem 列表。'},
     {g:'bk',s:'gemlist',t:['gemedit'],l:'點筆形符號編輯',x:'在 Gem 列表找到您的 Gem，點名稱後面的「筆」符號進入編輯（旁邊是分享符號）。'},
     {g:'bk',s:'gemedit1',t:['f-name','f-desc','f-inst'],l:'複製三個欄位',x:'把「名稱」「說明」「使用說明」欄整段複製起來。'},
