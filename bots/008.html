@@ -172,6 +172,8 @@ h1{font-size:clamp(1.6rem,4.2vw,2.3rem);line-height:1.3;margin:0 0 14px}
   border:2px solid var(--ink);box-shadow:4px 4px 0 var(--line);
 }
 .cta:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+.cta-disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(.6)}
+.cta-disabled:hover{transform:none;box-shadow:none}
 .cta-note{font-size:.8rem;color:var(--dim);margin-top:10px}
 section{margin-top:44px}
 h2{
@@ -219,8 +221,8 @@ footer a{color:var(--gold)}
       <span class="badge">Google Gemini Gem</span>
     </div>
     <p class="lead">「演講助理」是協助 ICI 課程助理與學生辦理 Guest Speaker（校外演講者）相關行政流程的查詢小幫手，涵蓋講者進用文件、酬勞說明、核銷流程與活動後續文件繳交。當你不確定該準備哪些表單、不同身分講者的費用怎麼算、海報要符合什麼規範、停車或列印費用怎麼報帳時，都可以直接詢問。它也會提醒演講結束後要繳交的文件與學期報告填寫事項。</p>
-    <a class="cta" href="https://gemini.google.com/gem/1pgKALMFiM5Cdq0nfaQknUTMnxHweVKnm?usp=sharing" rel="noopener" target="_blank">🚀 開始對話</a>
-    <p class="cta-note">建置於 Google Gemini Gem，需 Google 帳號登入 ・ 免費使用</p>
+    <span class="cta cta-disabled" aria-disabled="true">🚀 開始對話</span>
+    <p class="cta-note">原建置於 Gemini Gem，正在移轉佈署中。</p>
   </header>
 
   <section>

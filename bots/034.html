@@ -172,6 +172,8 @@ h1{font-size:clamp(1.6rem,4.2vw,2.3rem);line-height:1.3;margin:0 0 14px}
   border:2px solid var(--ink);box-shadow:4px 4px 0 var(--line);
 }
 .cta:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+.cta-disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(.6)}
+.cta-disabled:hover{transform:none;box-shadow:none}
 .cta-note{font-size:.8rem;color:var(--dim);margin-top:10px}
 section{margin-top:44px}
 h2{
@@ -219,8 +221,8 @@ footer a{color:var(--gold)}
       <span class="badge">Google Gemini Gem</span>
     </div>
     <p class="lead">政大公企中心場地租借小幫手專門說明公企中心（金華街校區）14 個可租借空間的介紹、容納人數與設備配置，並提供租金費用查詢與週一至週四上下午 85 折優惠說明。它也會引導使用者走完共 9 個步驟的申請流程、查詢取消退費規則與使用辦法注意事項，並協助聯繫會展組業務窗口。適用對象包含校內教職員生與校外一般民眾、國際師生。</p>
-    <a class="cta" href="https://gemini.google.com/gem/1aTHEHoUe4Eir2mSKW1Awkxqy8TGc6t03?usp=sharing" rel="noopener" target="_blank">🚀 開始對話</a>
-    <p class="cta-note">建置於 Google Gemini Gem，需 Google 帳號登入 ・ 免費使用</p>
+    <span class="cta cta-disabled" aria-disabled="true">🚀 開始對話</span>
+    <p class="cta-note">原建置於 Gemini Gem，正在移轉佈署中。</p>
   </header>
 
   <section>

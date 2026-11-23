@@ -172,6 +172,8 @@ h1{font-size:clamp(1.6rem,4.2vw,2.3rem);line-height:1.3;margin:0 0 14px}
   border:2px solid var(--ink);box-shadow:4px 4px 0 var(--line);
 }
 .cta:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+.cta-disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(.6)}
+.cta-disabled:hover{transform:none;box-shadow:none}
 .cta-note{font-size:.8rem;color:var(--dim);margin-top:10px}
 section{margin-top:44px}
 h2{
@@ -219,8 +221,8 @@ footer a{color:var(--gold)}
       <span class="badge">Google Gemini Gem</span>
     </div>
     <p class="lead">政大外交系「學位考試小幫手」是提供外交系學生查詢學位考試（論文口試）申請相關資訊的問答助理，說明申請前需要預先準備哪些文件、申請時間與各項注意事項。適合正在準備提出學位考試申請、或想確認繳交文件與流程時程的外交系研究生使用。</p>
-    <a class="cta" href="https://gemini.google.com/gem/1Z8lKBOX3qgauPCc5Bq_oJcazAbwJkwNk?usp=sharing" rel="noopener" target="_blank">🚀 開始對話</a>
-    <p class="cta-note">建置於 Google Gemini Gem，需 Google 帳號登入 ・ 免費使用</p>
+    <span class="cta cta-disabled" aria-disabled="true">🚀 開始對話</span>
+    <p class="cta-note">原建置於 Gemini Gem，正在移轉佈署中。</p>
   </header>
 
   <section>

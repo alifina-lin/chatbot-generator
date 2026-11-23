@@ -520,6 +520,13 @@ main { padding: 34px 40px 48px; }
   position: relative;
 }
 
+.launch-disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: grayscale(.5);
+}
+
 .has-tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -803,24 +810,6 @@ main { padding: 34px 40px 48px; }
   font-weight: 900;
   border: 3px solid #1e3a8a;
   box-shadow: 4px 4px 0 rgba(0,0,0,.28);
-}
-
-.tool-inline-link {
-  display: inline-flex;
-  align-items: center;
-  padding: 0;
-  background: none;
-  border: 0;
-  box-shadow: none;
-  color: rgba(255,255,255,.75);
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.tool-inline-link:hover {
-  color: #ffffff;
 }
 
 .course-title {

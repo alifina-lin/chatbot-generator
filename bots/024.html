@@ -172,6 +172,8 @@ h1{font-size:clamp(1.6rem,4.2vw,2.3rem);line-height:1.3;margin:0 0 14px}
   border:2px solid var(--ink);box-shadow:4px 4px 0 var(--line);
 }
 .cta:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+.cta-disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(.6)}
+.cta-disabled:hover{transform:none;box-shadow:none}
 .cta-note{font-size:.8rem;color:var(--dim);margin-top:10px}
 section{margin-top:44px}
 h2{
@@ -219,8 +221,8 @@ footer a{color:var(--gold)}
       <span class="badge">Google Gemini Gem</span>
     </div>
     <p class="lead">「創國國際新生指南」是政治大學創新國際學院提供的入學類 chatbot，主要服務對象為國際學生與一般新生。它的用途是協助國際學生更順利地完成新生入學階段的各項手續，例如報到與註冊流程上的疑問指引。登錄資料僅說明此一用途，未列出更細的功能清單，實際可回答範圍以創新國際學院提供的內容為準。</p>
-    <a class="cta" href="https://gemini.google.com/gem/1226qe75sPPPivefzomQX_RUtxHmmoYb-?usp=sharing" rel="noopener" target="_blank">🚀 開始對話</a>
-    <p class="cta-note">建置於 Google Gemini Gem，需 Google 帳號登入 ・ 免費使用</p>
+    <span class="cta cta-disabled" aria-disabled="true">🚀 開始對話</span>
+    <p class="cta-note">原建置於 Gemini Gem，正在移轉佈署中。</p>
   </header>
 
   <section>

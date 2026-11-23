@@ -346,7 +346,9 @@ function buildPod(bot) {
       ${splitText(bot.category).map(tag).join('')}
     </div>
 
-    <a class="launch${needsGoogleLogin(bot.platform) ? ' has-tooltip' : ''}" ${needsGoogleLogin(bot.platform) ? 'data-tooltip="🔑 可能需登入 Google 帳號才能使用"' : ''} href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>
+    ${isGemBot(bot)
+      ? '<span class="launch launch-disabled" aria-disabled="true">🛠 移轉中</span>'
+      : `<a class="launch" href="${escapeAttr(bot.url)}" target="_blank">🚀 Launch</a>`}
 
     <details class="detail">
       <summary>查看詳細資訊</summary>
@@ -355,6 +357,7 @@ function buildPod(bot) {
       <div><strong>服務對象：</strong>${escapeHtml(bot.audience || '未填寫')}</div>
       <div><strong>🛰 Mission Control：</strong>${escapeHtml(bot.unit || '未填寫')}</div>
       <div><strong>🧑‍🚀 Crew：</strong>${escapeHtml(bot.crew || '未填寫')}</div>
+      ${isGemBot(bot) ? `<div><strong>原Gem連結：</strong><a class="mission-link" href="${escapeAttr(bot.url)}" target="_blank">${escapeHtml(bot.url)}</a></div>` : ''}
       ${bot.number ? `<div class="mission-link-row"><a class="mission-link" href="bots/${escapeAttr(bot.number)}.html">📡 任務詳情</a></div>` : ''}
     </details>
 
@@ -371,9 +374,8 @@ function formatNumber(value) {
   return Number.isFinite(n) ? String(n).padStart(2, '0') : s;
 }
 
-function needsGoogleLogin(platform) {
-  const p = String(platform || '').toLowerCase();
-  return p.includes('gemini') || p.includes('gem');
+function isGemBot(bot) {
+  return String(bot.url || '').includes('gemini.google.com');
 }
 
 function splitText(value) {

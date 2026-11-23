@@ -172,6 +172,8 @@ h1{font-size:clamp(1.6rem,4.2vw,2.3rem);line-height:1.3;margin:0 0 14px}
   border:2px solid var(--ink);box-shadow:4px 4px 0 var(--line);
 }
 .cta:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+.cta-disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(.6)}
+.cta-disabled:hover{transform:none;box-shadow:none}
 .cta-note{font-size:.8rem;color:var(--dim);margin-top:10px}
 section{margin-top:44px}
 h2{
@@ -219,8 +221,8 @@ footer a{color:var(--gold)}
       <span class="badge">Google Gemini Gem</span>
     </div>
     <p class="lead">「中東中亞學程核銷小幫手」是中東中亞學程建置的行政問答工具，主要協助政大各單位行政承辦人員查詢《國立政治大學執行各項支出注意事項》（115年1月版）的相關規定。可用於系所核銷業務的常見問答（FAQ），例如各項支出在該注意事項中的規定內容與依據。</p>
-    <a class="cta" href="https://gemini.google.com/gem/1KiBel6RaHy6D755T9RHXK1Be9RB7YdF6?usp=sharing" rel="noopener" target="_blank">🚀 開始對話</a>
-    <p class="cta-note">建置於 Google Gemini Gem，需 Google 帳號登入 ・ 免費使用</p>
+    <span class="cta cta-disabled" aria-disabled="true">🚀 開始對話</span>
+    <p class="cta-note">原建置於 Gemini Gem，正在移轉佈署中。</p>
   </header>
 
   <section>
