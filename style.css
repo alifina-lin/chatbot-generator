@@ -310,7 +310,7 @@ main { padding: 34px 40px 48px; }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 26px;
 }
 
@@ -575,6 +575,7 @@ main { padding: 34px 40px 48px; }
 }
 
 .detail {
+  overflow-wrap: anywhere;
   margin-top: 14px;
   border-top: 2px dashed #94a3b8;
   padding-top: 12px;
@@ -704,7 +705,7 @@ main { padding: 34px 40px 48px; }
   .hero-rocket { opacity: .2; left: 20px; }
   h1 { font-size: 46px; }
   .subtitle { font-size: 22px; }
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
   main { padding: 28px 20px; }
 }
 
