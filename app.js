@@ -1,6 +1,6 @@
 // ===== 設定區 =====
 // 把下面換成你部署 Code.gs 後拿到的 Web App 網址（結尾是 /exec）
-const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxFuQEWscNJNyA1qmzs0G967Z2954-6dWtwBn60plrklUqOX8MUIVvG0wGFkoCGVGWJZA/exec';
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbx3KGInRam4c-gKrhKNYL3T3knOWDdamSRS5t0dJMW8flIJIzGG2VSqr9_mJiRwDVA4Vg/exec';
 
 // ===== 業務分類收斂表（前端規則，不動 GAS / Sheet / 索引） =====
 const CATEGORY_GROUPS = [
@@ -25,7 +25,8 @@ const CATEGORY_GROUPS = [
 ];
 const OTHER_GROUP = '其他';
 
-let allBots = [];
+let allBots = [];       // 現役（服務中／暫停）
+let retiredBots = [];   // 已退役：不參與分類 chip、數量統計與驗證／Beta 區
 let currentAudience = 'all';
 let currentCategory = 'all';
 let hasAutoScrolledToResults = false;
@@ -82,8 +83,14 @@ function showSkeleton(count = 6) {
   verifiedGrid.innerHTML = '';
 }
 
+function isRetired(bot) {
+  return String(bot.serviceStatus || '').trim() === '退役';
+}
+
 function init(data) {
-  allBots = data || [];
+  const rows = data || [];
+  allBots = rows.filter(bot => !isRetired(bot));
+  retiredBots = rows.filter(isRetired);
   buildCategoryFilters();
   render();
 }
@@ -287,11 +294,48 @@ function render() {
     resultsEmpty.hidden = (verifiedBots.length + betaBots.length) > 0;
   }
 
-  updateSearchFeedback(filtering, verifiedBots.length, betaBots.length);
+  const retiredHits = renderRetired(keyword, filtering);
+
+  updateSearchFeedback(filtering, verifiedBots.length, betaBots.length, retiredHits);
   maybeAutoScrollToResults(filtering);
 }
 
-function updateSearchFeedback(filtering, verifiedCount, betaCount) {
+// 已退役區：瀏覽態顯示全部（預設收合）；篩選態只有「關鍵字命中」才顯示並自動展開，
+// 分類／服務對象 chip 篩選不含退役。比對欄位只用名稱／簡介／單位。回傳命中數。
+function renderRetired(keyword, filtering) {
+  const section = document.getElementById('retired');
+  const details = document.getElementById('retiredDetails');
+  const grid = document.getElementById('retiredGrid');
+  const countEl = document.getElementById('retiredCount');
+
+  if (!retiredBots.length) {
+    section.hidden = true;
+    return 0;
+  }
+
+  const chipActive = currentAudience !== 'all' || currentCategory !== 'all';
+  let shown;
+  let searching = false;
+  if (!filtering) {
+    shown = retiredBots;
+  } else if (keyword && !chipActive) {
+    shown = retiredBots.filter(bot =>
+      [bot.name, bot.brief, bot.unit].join(' ').toLowerCase().includes(keyword));
+    searching = true;
+  } else {
+    shown = [];
+  }
+
+  section.hidden = shown.length === 0;
+  grid.innerHTML = '';
+  shown.forEach(bot => grid.appendChild(buildRetiredPod(bot)));
+  countEl.textContent = searching ? `（命中 ${shown.length}）` : `（${shown.length}）`;
+  // 命中時自動展開；回到瀏覽態時收回預設的收合
+  details.open = searching && shown.length > 0;
+  return searching ? shown.length : 0;
+}
+
+function updateSearchFeedback(filtering, verifiedCount, betaCount, retiredHits = 0) {
   const feedback = document.getElementById('searchFeedback');
   const feedbackFloating = document.getElementById('searchFeedbackFloating');
   if (!filtering) {
@@ -300,7 +344,8 @@ function updateSearchFeedback(filtering, verifiedCount, betaCount) {
     return;
   }
   const total = verifiedCount + betaCount;
-  const text = total ? `找到 ${total} 個確吧 · 驗證 ${verifiedCount} / Beta ${betaCount}` : '找到 0 個確吧';
+  let text = total ? `找到 ${total} 個確吧 · 驗證 ${verifiedCount} / Beta ${betaCount}` : '找到 0 個確吧';
+  if (retiredHits) text += ` · 另有 ${retiredHits} 個已退役`;
   feedback.textContent = text;
   feedback.hidden = false;
   feedbackFloating.textContent = text;
@@ -364,6 +409,25 @@ function buildPod(bot) {
     ${bot.updatedAt ? `<div class="updated-line">${escapeHtml(bot.updatedAt)} updated</div>` : ''}
   `;
 
+  return pod;
+}
+
+// 已退役卡片：只有名稱／簡介／單位／退役日期；沒有對話連結、驗證徽章、服務對象或平台標籤。
+function buildRetiredPod(bot) {
+  const pod = document.createElement('article');
+  pod.className = 'pod retired';
+  const numberLabel = formatNumber(bot.number);
+  const title = bot.number
+    ? `<a class="pod-title retired-title" href="bots/${escapeAttr(bot.number)}.html">${escapeHtml(bot.name)}</a>`
+    : `<div class="pod-title retired-title">${escapeHtml(bot.name)}</div>`;
+
+  pod.innerHTML = `
+    ${numberLabel ? `<div class="pod-number">No.${numberLabel}</div>` : ''}
+    ${title}
+    <div class="brief">${escapeHtml(bot.brief)}</div>
+    <div class="tags">${tag(bot.unit)}</div>
+    <div class="retired-line">${bot.retiredAt ? `已於 ${escapeHtml(bot.retiredAt)} 退役` : '已退役'}</div>
+  `;
   return pod;
 }
 
