@@ -995,3 +995,34 @@ main { padding: 34px 40px 48px; }
     height: calc(100vh - 160px);
   }
 }
+
+.bot-directory { margin-bottom: 16px; }
+
+.bot-directory summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,.55);
+  list-style: none;
+}
+
+.bot-directory summary::-webkit-details-marker { display: none; }
+.bot-directory summary::before { content: "▸ "; }
+.bot-directory[open] summary::before { content: "▾ "; }
+
+.bot-directory ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px 16px;
+}
+
+.bot-directory a {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  text-decoration: none;
+}
+
+.bot-directory a:hover { color: var(--gold, #f6c453); text-decoration: underline; }
