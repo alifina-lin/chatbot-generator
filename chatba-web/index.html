@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>確吧 Chatba!｜AI 小幫手建置（網頁版）</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="gate" class="gate" hidden>
+  <form id="gate-form" class="gate-card" autocomplete="off">
+    <h1>確吧 Chatba!</h1>
+    <p class="sub">用對話幫你做出單位專用的 AI 小幫手。<br>請輸入通行碼開始。</p>
+    <input id="gate-input" type="password" placeholder="通行碼" aria-label="通行碼" required>
+    <button type="submit" id="gate-btn">進入</button>
+    <p id="gate-err" class="err" role="alert"></p>
+  </form>
+</div>
+
+<div id="app" class="app" hidden>
+  <header class="top">
+    <div class="brand"><strong>確吧</strong> Chatba!<span class="tag">網頁版</span></div>
+    <div class="top-actions">
+      <span id="len-hint" class="len-hint" hidden></span>
+      <button id="new-chat" class="ghost" type="button">新對話</button>
+    </div>
+  </header>
+
+  <div id="progress" class="progress" hidden>
+    <div class="progress-label" id="progress-label"></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <main id="chat" class="chat" aria-live="polite">
+    <section id="welcome" class="welcome">
+      <h2>三步做出你的 AI 小幫手</h2>
+      <p>確吧會先讀你給的資料、先做推論，你只要回答「對」或「不對」。結束時給你一份可直接複製的系統 prompt 與部署步驟。</p>
+      <div class="warn">上傳或貼上資料前，請先去識別化。含個資、成績、薪資、人事、申請紀錄或校內登入資料的內容，請不要放進來。</div>
+      <div class="start-row">
+        <button id="start-upload" type="button" class="primary">上傳我的資料</button>
+        <button id="start-go" type="button">直接開始</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="error" class="error" hidden></div>
+
+  <div id="quick" class="quick" hidden>
+    <button type="button" data-send="對，就這樣。">對，就這樣</button>
+    <button type="button" data-fill="不對，需要調整：">不對，我要調整</button>
+    <button type="button" data-send="請繼續。">請繼續</button>
+    <button type="button" id="copy-final" class="primary" hidden>複製完整 prompt</button>
+  </div>
+
+  <footer class="composer">
+    <div id="attach-list" class="attach-list"></div>
+    <div class="composer-row">
+      <button id="attach-btn" class="icon" type="button" title="上傳文件（txt／md／csv／docx／pdf）" aria-label="上傳文件">＋</button>
+      <input id="file" type="file" multiple hidden accept=".txt,.md,.csv,.json,.docx,.pdf">
+      <textarea id="input" rows="1" placeholder="貼上資料或描述需求…" aria-label="輸入訊息"></textarea>
+      <button id="stop" class="ghost" type="button" hidden>停止</button>
+      <button id="send" class="primary" type="button">送出</button>
+    </div>
+    <p class="note">本服務使用生成式 AI，內容可能有誤，部署前請自行核對。對話內容會送至校內 AI 平台（myai168）處理。</p>
+  </footer>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
